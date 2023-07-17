@@ -1,0 +1,15 @@
+@font-face {
+    font-family: bmw-group-cond;
+    src: url('../assets/BMWGroup_Cond_Regular.woff2') format('woff2');
+  }
+  
+  :host {
+    flex-grow: 1;
+    
+  }
+  
+  .chart-container {
+    width: 500px;
+    height: 174px;
+    background-color: transparent;
+  }
