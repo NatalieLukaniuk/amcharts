@@ -31,7 +31,7 @@ export class DataVizChartHorizontalTableBarInstance extends AbstractDataVizChart
   gridDistance = 10; //distance in between char rows
 
   fontColor = '#fff';
-  bmwFontFamily = 'bmw-group-cond';
+  bmwFontFamily = 'Poppins';
 
   horizontalShift = 10;
 
