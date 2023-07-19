@@ -15,26 +15,8 @@ export class AppComponent implements OnDestroy {
  data = {
     actualData: [
     {
-    captionValue: "+54,777 / +4.7%",
-    mainValue: 54777,
-    rowName: "Prev. Year",
-    tooltip: ""
-    },
-    {
-    captionValue: "-29,217 / -2.4%",
-    mainValue: -29217,
-    rowName: "Budget",
-    tooltip: "-29,217"
-    },
-    {
-    captionValue: "+8,969 / +0.7%",
-    mainValue: 8969,
-    rowName: "FC07",
-    tooltip: ""
-    },
-    {
-    captionValue: "1,211,683 units",
-    mainValue: 1211683,
+    captionValue: "5,432,178 units",
+    mainValue: 5432178,
     rowName: "[bold]Actual[/]",
     tooltip: ""
     }
