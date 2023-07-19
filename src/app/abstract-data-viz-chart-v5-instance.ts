@@ -37,7 +37,10 @@ export abstract class AbstractDataVizChartV5Instance<DataType> {
     }
 
     if (elementExists) {
-      this.rootElement = this.amCharts.am5core?.Root.new(this.chartId, type);
+      this.rootElement = this.amCharts.am5core?.Root.new(this.chartId, {
+        useSafeResolution: false,
+        ...type
+      });
       this.chart = this.rootElement?.container.children.push(
         type.new(this.rootElement, {
           layout: this.rootElement?.verticalLayout,
