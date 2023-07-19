@@ -19,7 +19,13 @@ export class AppComponent implements OnDestroy {
     mainValue: 5432178,
     rowName: "[bold]Actual[/]",
     tooltip: ""
-    }
+    },
+    {
+      captionValue: "+98,712 / +100.7%",
+      mainValue: 98776,
+      rowName: "Prev. Year",
+      tooltip: ""
+      },
     
     ],
     alternateSuffix: "%",
