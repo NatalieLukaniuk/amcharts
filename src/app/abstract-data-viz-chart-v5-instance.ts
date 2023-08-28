@@ -50,4 +50,12 @@ export abstract class AbstractDataVizChartV5Instance<DataType> {
   }
 
   abstract dispose(): void;
+
+  updatePosition(currentPosition: any) {
+    return currentPosition;
+  }
+
+  hideLabels() {
+    return;
+  }
 }

@@ -1,7 +1,16 @@
-import { Component, HostListener, OnDestroy } from "@angular/core";
+import { Component, OnDestroy, ViewChild } from "@angular/core";
 import { AbstractDataVizChartV5Instance } from "./abstract-data-viz-chart-v5-instance";
 import { AmCharts5Service } from "./am-charts-v5.service";
-import { DataVizChartHorizontalTableBarInstance } from "./data-viz-chart-horizontal-table-bar-instance";
+import { DataVizChartSalesReachMobileInstance } from "./data-viz-sales-reach-instance";
+import { countryList } from "./utils";
+
+export interface ChartDataItem {
+  category: string;
+  actual: number;
+  forecast: number;
+  salesReach: number;
+  tooltip?: string;
+}
 
 @Component({
   selector: 'app-root',
@@ -12,51 +21,101 @@ export class AppComponent implements OnDestroy {
   chartInstance!: AbstractDataVizChartV5Instance<any>;
   chartId = 'test-chart';
 
- data = {
-    actualData: [
-    {
-    captionValue: "5,432,178 units",
-    mainValue: 5432178,
-    rowName: "[bold]Actual[/]",
-    tooltip: ""
-    },
-    {
-      captionValue: "+98,712 / +100.7%",
-      mainValue: 98776,
-      rowName: "Prev. Year",
-      tooltip: ""
-      },
-    
-    ],
-    alternateSuffix: "%",
-    estimation: undefined,
-    invertColors: false,
-    isPinned: true,
-    suffix: undefined
-    }
+  data: ChartDataItem[] = [];
 
-  constructor(private amChartsService: AmCharts5Service){
-    
+  constructor(private amChartsService: AmCharts5Service) {
+
   }
-  
+
   ngOnDestroy(): void {
     this.chartInstance?.dispose();
   }
 
-  @HostListener('window:resize')
-  onResize() {
-    (this.chartInstance as DataVizChartHorizontalTableBarInstance).recreateTick();
-  }
 
+  @ViewChild('scrollingElement') scrollingElement: any;
+  @ViewChild('scrollcontainer') scrollcontainer: any;
 
-  ngOnInit(){
+  ngOnInit() {
+    
+
+    this.data = countryList.map(countryName => this.generateDataPerCountry(countryName));
+
     this.amChartsService.modulesV5.subscribe(modulesV5 => {
-      this.chartInstance = new DataVizChartHorizontalTableBarInstance(
+     const chartConfig = {
+      actualSeriesName: 'Order Bank + Retail',
+      forecastSeriesName: 'Retail Forecast',
+      salesReachSeriesName: 'Sales Reach',
+      actualsColor: '#79B6D8',
+      forecastColor: '#6F94D6',
+      salesReachColor: '#000',
+      tooltipTextColor: '#fff',
+      topValueAxisTitle: 'Retail FC /\nOrder Bank +\nRetail Actuals',
+      salesReachAxisTitle: 'Sales\nReach',
+      isRotateLabels: true,
+      visibleAreaWidth: this.scrollcontainer?.nativeElement.clientWidth,
+      categoryAxisWidthHorizontalBars: 140
+    };
+      this.chartInstance = new DataVizChartSalesReachMobileInstance(
         modulesV5,
         this.data,
-        this.chartId
+        this.chartId,
+        chartConfig
       );
     })
-    
+
   }
+
+  generateDataPerCountry(countryName: string): ChartDataItem {
+    return {
+      category: countryName,
+      actual: this.getRandomNumber(),
+      forecast: this.getRandomNumber(),
+      salesReach: Math.random()
+    }
+  }
+
+  getRandomNumber() {
+    return Math.round(Math.random() * 1000000)
+  }
+
+  ngAfterViewInit(): void {
+    if (this.scrollingElement) {
+      this.scrollingElement.nativeElement.addEventListener('touchstart', this.onTouchStart);
+    }
+  }
+
+  onTouchStart = () => {
+    if (
+      this.scrollingElement.nativeElement.clientWidth > this.scrollcontainer.nativeElement.clientWidth &&
+      !!this.chartInstance
+    ) {
+      this.scrollingElement.nativeElement.addEventListener('touchend', this.endTouch);
+      this.scrollingElement.nativeElement.addEventListener('touchmove', this.moveTouch);
+    }
+  };
+
+  endTouch = () => {
+    // updatePosition method is aimed on updating the position of all elements that
+    // should preserve fixed position after user finished scrolling
+    this.chartInstance?.updatePosition(this.scrollcontainer.nativeElement.scrollLeft);
+    this.scrollingElement.nativeElement.removeEventListener('touchmove', this.moveTouch);
+    this.scrollingElement.nativeElement.removeEventListener('touchend', this.endTouch);
+    setTimeout(() => {
+      this.chartInstance?.updatePosition(this.scrollcontainer.nativeElement.scrollLeft);
+    }, 500);
+    setTimeout(() => {
+      this.chartInstance?.updatePosition(this.scrollcontainer.nativeElement.scrollLeft);
+    }, 1000);
+    setTimeout(() => {
+      this.chartInstance?.updatePosition(this.scrollcontainer.nativeElement.scrollLeft);
+    }, 2000);
+  };
+
+  moveTouch = () => {
+    // hideLabels method is aimed to temporarily hide all elements (other than y-axes) that
+    // should preserve fixed position after user finished scrolling
+    this.chartInstance?.hideLabels();
+  };
+
+  // ---- end
 }
