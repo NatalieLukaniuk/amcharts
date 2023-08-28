@@ -36,25 +36,25 @@ export class AppComponent implements OnDestroy {
   @ViewChild('scrollcontainer') scrollcontainer: any;
 
   ngOnInit() {
-    
 
-    this.data = countryList.map(countryName => this.generateDataPerCountry(countryName));
+    const sorted = countryList.sort((a, b) => b.localeCompare(a));
+    this.data = sorted.map(countryName => this.generateDataPerCountry(countryName));
 
     this.amChartsService.modulesV5.subscribe(modulesV5 => {
-     const chartConfig = {
-      actualSeriesName: 'Order Bank + Retail',
-      forecastSeriesName: 'Retail Forecast',
-      salesReachSeriesName: 'Sales Reach',
-      actualsColor: '#79B6D8',
-      forecastColor: '#6F94D6',
-      salesReachColor: '#000',
-      tooltipTextColor: '#fff',
-      topValueAxisTitle: 'Retail FC /\nOrder Bank +\nRetail Actuals',
-      salesReachAxisTitle: 'Sales\nReach',
-      isRotateLabels: true,
-      visibleAreaWidth: this.scrollcontainer?.nativeElement.clientWidth,
-      categoryAxisWidthHorizontalBars: 140
-    };
+      const chartConfig = {
+        actualSeriesName: 'Order Bank + Retail',
+        forecastSeriesName: 'Retail Forecast',
+        salesReachSeriesName: 'Sales Reach',
+        actualsColor: '#79B6D8',
+        forecastColor: '#6F94D6',
+        salesReachColor: '#000',
+        tooltipTextColor: '#fff',
+        topValueAxisTitle: 'Retail FC /\nOrder Bank +\nRetail Actuals',
+        salesReachAxisTitle: 'Sales\nReach',
+        isRotateLabels: true,
+        visibleAreaWidth: this.scrollcontainer?.nativeElement.clientWidth,
+        categoryAxisWidthHorizontalBars: 140
+      };
       this.chartInstance = new DataVizChartSalesReachMobileInstance(
         modulesV5,
         this.data,
