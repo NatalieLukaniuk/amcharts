@@ -1,9 +1,10 @@
 import { AxisRenderer, AxisRendererY, CategoryAxis, ColumnSeries, LineSeries, ValueAxis } from '@amcharts/amcharts5/xy';
 import { AbstractDataVizChartV5Instance } from './abstract-data-viz-chart-v5-instance';
-import { ChartDataItem } from './app.component';
+
 import * as am5 from '@amcharts/amcharts5';
 import { Subscription } from 'rxjs';
 import { AmCharts5ImportedModules } from './am-charts-v5.service';
+import { ChartDataItem } from './chart-parent-component/sales-reach-tooltip-defect/sales-reach-tooltip-defect.component';
 
 export class DataVizChartSalesReachMobileInstance extends AbstractDataVizChartV5Instance<ChartDataItem[]> {
     chart?: import('@amcharts/amcharts5/xy').XYChart;
