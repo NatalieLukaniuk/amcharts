@@ -31,6 +31,7 @@ export class DataVizHeatmapInstance extends AbstractDataVizChartV5Instance<DataV
     paddingRight: 0,
     paddingLeft: 0,
     fontSize: 14,
+    interactive: true
   };
 
   constructor(
@@ -42,7 +43,7 @@ export class DataVizHeatmapInstance extends AbstractDataVizChartV5Instance<DataV
 
     try {
       this.initializeChart(this.chart, this.chartId);
-    } catch (unused) {}
+    } catch (unused) { }
 
     if (this.chart) {
 
@@ -123,6 +124,9 @@ export class DataVizHeatmapInstance extends AbstractDataVizChartV5Instance<DataV
       return am5.color(color);
     });
 
+    series.events.on('pointerover', (ev) => {
+      console.log('tooltip label interactive: ' + ev.target.get('tooltip')?.label.get('interactive'))
+    })
     series.data.setAll(data);
     series.appear();
 
