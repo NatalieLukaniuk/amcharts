@@ -25,14 +25,7 @@ export class DataVizHeatmapInstance extends AbstractDataVizChartV5Instance<DataV
     text: am5.color('#000'),
   };
 
-  labelSettings = {
-    paddingTop: 0,
-    paddingBottom: 0,
-    paddingRight: 0,
-    paddingLeft: 0,
-    fontSize: 14,
-    interactive: true
-  };
+  
 
   constructor(
     readonly amCharts: AmCharts5ImportedModules,
@@ -58,22 +51,21 @@ export class DataVizHeatmapInstance extends AbstractDataVizChartV5Instance<DataV
     this.createSeries(xAxis, yAxis, this.data.series);
   }
 
-  createSeries(xAxis: any, yAxis: any, data: unknown[]) {
-    const tooltipSettings = {
+  getTooltip() {
+    const tooltipSettings: am5.ITooltipSettings = {
       keepTargetHover: true,
       getFillFromSprite: false,
       pointerOrientation: 'horizontal',
       wheelable: true,
       visible: true,
       interactive: true,
-      trustBounds: true,
       paddingTop: 0,
       paddingBottom: 0,
       paddingRight: 0,
       paddingLeft: 0,
     };
 
-    const backgroundSettings = {
+    const backgroundSettings: Partial<am5.IGraphicsSettings> = {
       fill: this.tooltipColors.background,
       fillOpacity: 1,
       shadowBlur: 10,
@@ -81,14 +73,25 @@ export class DataVizHeatmapInstance extends AbstractDataVizChartV5Instance<DataV
       shadowOffsetY: 4,
       shadowOpacity: 0.5,
       shadowColor: this.colors.black,
-      strokeOpacity: 0,
+      strokeOpacity: 0,      
+    };
+
+    const labelSettings: Partial<am5.ILabelSettings> = {
       paddingTop: 0,
       paddingBottom: 0,
       paddingRight: 0,
       paddingLeft: 0,
+      fontSize: 14,
+      interactive: true,
     };
+    const tooltip = am5.Tooltip.new(this.rootElement, tooltipSettings);
+    tooltip.get('background')?.setAll(backgroundSettings);
+    tooltip.label.setAll(labelSettings);
+    return tooltip;
+  }
 
-    const tooltip = this.getTooltip(tooltipSettings, backgroundSettings);
+  createSeries(xAxis: any, yAxis: any, data: unknown[]) {
+    const tooltip = this.getTooltip();
     tooltip.label.set('fill', this.tooltipColors.text);
 
     const series = this.chart!.series.push(
@@ -143,13 +146,6 @@ export class DataVizHeatmapInstance extends AbstractDataVizChartV5Instance<DataV
       wheelable: true,
       width: am5.p100,
     });
-  }
-
-  getTooltip(tooltipSettings: any, backgroundSettings: any) {
-    const tooltip = am5.Tooltip.new(this.rootElement, tooltipSettings);
-    tooltip.get('background')?.setAll(backgroundSettings);
-    tooltip.label.setAll(this.labelSettings);
-    return tooltip;
   }
 
   dispose(): void {
