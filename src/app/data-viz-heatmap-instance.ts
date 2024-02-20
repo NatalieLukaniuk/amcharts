@@ -53,7 +53,7 @@ export class DataVizHeatmapInstance extends AbstractDataVizChartV5Instance<DataV
 
   getTooltip() {
     const tooltipSettings: am5.ITooltipSettings = {
-      keepTargetHover: true,
+      // keepTargetHover: true,
       getFillFromSprite: false,
       pointerOrientation: 'horizontal',
       wheelable: true,
@@ -120,6 +120,21 @@ export class DataVizHeatmapInstance extends AbstractDataVizChartV5Instance<DataV
       tooltipHTML: `<div class='tp-label-medium' style='max-height:${maxHeight}px; ` +
         `overflow-y: auto; pointer-events: auto; border-radius: 5px;
             background: ${this.tooltipColors.background};'>{tooltip}</div>`,
+    });
+
+    series.columns.template.events.on("pointerover", (ev) => {
+      ev.target.set("showTooltipOn", "always");    
+    });    
+    
+    series.columns.template.events.on("pointerout", (ev) => {    
+      ev.target.set("showTooltipOn", "hover");    
+    });    
+    
+    // Hide tooltip when cursor leaves plot container    
+    this.chart?.plotContainer.events.on("pointerout", (ev: any) => {    
+      if (ev.originalEvent.target.tagName == "CANVAS") {    
+        series.get("tooltip")!.hide();    
+      }    
     });
 
     series.columns.template.adapters.add('fill', (fill, target: any) => {
